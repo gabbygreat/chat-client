@@ -1,3 +1,5 @@
+import 'package:chat/widgets/proceed_button.dart';
+
 import '../../utils/utils.dart';
 
 part 'view.dart';
@@ -15,6 +17,10 @@ class HomeController extends State<HomeScreen> {
     super.initState();
     SocketServices.instance.connectAndListen();
   }
+
+  goToChat() => context.pushNamed(
+        'conversation',
+      );
 
   @override
   Widget build(BuildContext context) {

@@ -7,8 +7,10 @@ class AppThemeConfig {
 
   static final AppThemeConfig instance = AppThemeConfig._privateRepository();
 
-  final ThemeData _themeData =
-      ThemeData(fontFamily: 'Grotesk', primaryColor: const Color(0xff3a4f78));
+  final ThemeData _themeData = ThemeData(
+    fontFamily: 'Grotesk',
+    primaryColor: const Color(0xff3a4f78),
+  );
 
   ThemeData get themeData => _themeData;
 
