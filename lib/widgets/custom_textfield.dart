@@ -20,12 +20,14 @@ class CustomTextInput extends StatelessWidget {
   final bool? enabled;
   final void Function()? onTap;
   final String? hintText;
-  final String titleText;
+  final String? titleText;
   final Widget? suffixIcon;
   final Widget? prefixIcon;
+  final double? border;
   final String? Function(String?)? validator;
   final TextCapitalization textCapitalization;
   final AutovalidateMode? autovalidateMode;
+  final EdgeInsetsGeometry? contentPadding;
   final String? textInfo;
   const CustomTextInput({
     Key? key,
@@ -34,6 +36,7 @@ class CustomTextInput extends StatelessWidget {
     this.textInputAction,
     this.readOnly = false,
     this.autofocus = false,
+    this.contentPadding,
     this.obscuringCharacter = '•',
     this.obscureText = false,
     this.enableSuggestions = true,
@@ -49,11 +52,12 @@ class CustomTextInput extends StatelessWidget {
     this.onTap,
     this.textInfo,
     this.hintText,
+    this.border,
     this.suffixIcon,
     this.textCapitalization = TextCapitalization.none,
     this.prefixIcon,
     this.validator,
-    required this.titleText,
+    this.titleText,
     this.autovalidateMode,
   }) : super(key: key);
 
@@ -61,30 +65,32 @@ class CustomTextInput extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        RichText(
-          text: TextSpan(
-            children: [
-              TextSpan(
-                text: titleText,
-                style: TextStyle(
-                  fontWeight: FontWeight.w400,
-                  fontSize: 14.sp,
-                  color: secondaryColor,
-                ),
-              ),
-              if (textInfo != null)
+        if (titleText != null)
+          RichText(
+            text: TextSpan(
+              children: [
                 TextSpan(
-                  text: '  ($textInfo)',
+                  text: titleText,
                   style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 10.sp,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 14.sp,
                     color: secondaryColor,
                   ),
                 ),
-            ],
+                if (textInfo != null)
+                  TextSpan(
+                    text: '  ($textInfo)',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 10.sp,
+                      color: secondaryColor,
+                    ),
+                  ),
+              ],
+            ),
           ),
-        ),
         SizedBox(
           height: 8.0.h,
         ),
@@ -116,10 +122,7 @@ class CustomTextInput extends StatelessWidget {
             color: blackColor,
           ),
           decoration: InputDecoration(
-            contentPadding: EdgeInsets.symmetric(
-              vertical: 15.h,
-              horizontal: 15.w,
-            ),
+            contentPadding: contentPadding,
             hintStyle: TextStyle(
               fontWeight: FontWeight.w400,
               fontSize: 16,
@@ -129,19 +132,19 @@ class CustomTextInput extends StatelessWidget {
             suffixIcon: suffixIcon,
             hintText: hintText,
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8.r),
+              borderRadius: BorderRadius.circular(border ?? 8.r),
               borderSide: BorderSide(
                 color: blackColor,
               ),
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8.r),
+              borderRadius: BorderRadius.circular(border ?? 8.r),
               borderSide: BorderSide(
                 color: blackColor,
               ),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8.r),
+              borderRadius: BorderRadius.circular(border ?? 8.r),
               borderSide: BorderSide(
                 color: blackColor,
               ),

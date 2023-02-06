@@ -6,9 +6,21 @@ class HomeView extends StatelessView<HomeScreen, HomeController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: scaffoldBg,
-      body: const Center(
-        child: Text('Home'),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Spacer(),
+          Lottie.asset(
+            'assets/lottie/chat.json',
+          ),
+          const Spacer(),
+          ProceedButton(
+            onTap: () => controller.goToChat(),
+          ),
+          SizedBox(
+            height: 30.h,
+          ),
+        ],
       ),
     );
   }

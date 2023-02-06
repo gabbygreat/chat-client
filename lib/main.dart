@@ -1,7 +1,11 @@
 import 'utils/utils.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    const ProviderScope(
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -9,13 +13,21 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Playground',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return KeyboardDismisser(
+      gestures: const [GestureType.onTap],
+      child: ScreenUtilInit(
+        designSize: const Size(375, 812),
+        minTextAdapt: true,
+        splitScreenMode: true,
+        builder: (context, child) {
+          return MaterialApp.router(
+            routerConfig: routes,
+            title: 'Chat app',
+            debugShowCheckedModeBanner: false,
+            theme: AppThemeConfig.instance.themeData,
+          );
+        },
       ),
-      home: const HomeScreen(),
     );
   }
 }
