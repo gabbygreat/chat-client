@@ -16,10 +16,22 @@ class ConversationView
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            CircleAvatar(
-              radius: 20.r,
-              child: const Icon(
-                Icons.person,
+            InkWell(
+              onTap: () => controller.context.pop(),
+              overlayColor: MaterialStateProperty.resolveWith(
+                (states) => Colors.transparent,
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(Icons.arrow_back_ios),
+                  CircleAvatar(
+                    radius: 20.r,
+                    child: const Icon(
+                      Icons.person,
+                    ),
+                  ),
+                ],
               ),
             ),
             SizedBox(
@@ -53,9 +65,6 @@ class ConversationView
   Widget build(BuildContext context) {
     final message = controller.ref.watch(messageProvider);
     return Scaffold(
-      // appBar: CustomAppBar(
-      //   color: secondaryColor,
-      // ),
       backgroundColor: scaffoldBg,
       bottomSheet: Container(
         height: 90.h,
@@ -85,7 +94,7 @@ class ConversationView
                 border: 30.r,
               ),
             ),
-            if (controller.messageController.text.isNotEmpty)
+            if (controller.messageController.text.trim().isNotEmpty)
               IconButton(
                 onPressed: () => controller.sendMessage(),
                 icon: const Icon(

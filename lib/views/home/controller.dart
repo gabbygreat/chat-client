@@ -12,12 +12,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class HomeController extends State<HomeScreen> {
-  @override
-  void initState() {
-    super.initState();
-    SocketServices.instance.connectAndListen();
-  }
-
   goToChat() => context.pushNamed(
         'conversation',
       );
