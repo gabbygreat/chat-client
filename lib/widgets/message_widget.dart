@@ -16,8 +16,15 @@ class _MessageWidgetState extends State<MessageWidget> {
   String? deviceId;
 
   @override
+  void initState() {
+    super.initState();
+    PlatformDeviceId.getDeviceId.then(
+      (value) => setState(() => deviceId = value),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
-    PlatformDeviceId.getDeviceId.then((value) => deviceId = value);
     return Padding(
       padding: EdgeInsets.only(bottom: 8.h),
       child: Row(

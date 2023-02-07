@@ -1,21 +1,21 @@
 class MessageModel {
   final String message;
   final DateTime dateTime;
-  final String? displayName;
+  String? recipientName;
   final String deviceId;
   final String conversationId;
   MessageModel({
     required this.dateTime,
     required this.message,
     required this.deviceId,
-    required this.displayName,
+    required this.recipientName,
     required this.conversationId,
   });
 
   static MessageModel fromMap(Map<String, dynamic> data) => MessageModel(
       dateTime: DateTime.parse(data['dateTime']),
       message: data['message'],
-      displayName: data['displayName'],
+      recipientName: data['recipientName'],
       deviceId: data['deviceId'],
       conversationId: data['conversationId']);
 
@@ -23,7 +23,7 @@ class MessageModel {
         'message': message,
         'dateTime': dateTime.toIso8601String(),
         'deviceId': deviceId,
-        'displayName': displayName,
+        'recipientName': recipientName,
         'conversationId': conversationId
       };
 }

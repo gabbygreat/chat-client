@@ -19,6 +19,7 @@ class ConversationScreen extends ConsumerStatefulWidget {
 class ConversationController extends ConsumerState<ConversationScreen> {
   late TextEditingController messageController;
   late ScrollController listController;
+  late String recipientName;
   bool visible = false;
 
   @override
@@ -26,7 +27,8 @@ class ConversationController extends ConsumerState<ConversationScreen> {
     super.initState();
     messageController = TextEditingController();
     listController = ScrollController();
-
+    recipientName = widget.messageInfo.recipientName ??
+        'User ${widget.messageInfo.deviceId}';
     listController.addListener(() {
       if (listController.offset > 0) {
         setState(() {
@@ -55,14 +57,13 @@ class ConversationController extends ConsumerState<ConversationScreen> {
     FocusScope.of(context).unfocus();
     String deviceId = (await PlatformDeviceId.getDeviceId)!;
     List<String> conversationIds = [deviceId, widget.messageInfo.deviceId];
-    String? displayName = await LocalStorage.instance.getDisplayName();
     final conversationId = conversationIds.join('-');
     await ref.read(messageProvider.notifier).addMessage(
           MessageModel(
             dateTime: DateTime.now(),
             message: messageController.text.trim(),
             deviceId: deviceId,
-            displayName: displayName,
+            recipientName: recipientName,
             conversationId: conversationId,
           ),
         );

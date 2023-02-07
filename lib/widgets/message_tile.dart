@@ -41,8 +41,8 @@ class MessageTile extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
-                        'John Smith',
+                      Text(
+                        message.recipientName ?? 'User ${message.deviceId}',
                       ),
                       Text(
                         DateFormat('h:mm a').format(

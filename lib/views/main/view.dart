@@ -111,7 +111,7 @@ class MainView extends StatelessView<MainScreen, MvcController> {
                                       dateTime: DateTime.now(),
                                       message: 'How body?',
                                       deviceId: '1234567',
-                                      displayName: 'Test',
+                                      recipientName: 'Test Name',
                                       conversationId: conversationId,
                                     ),
                                   );

@@ -31,7 +31,7 @@ CREATE TABLE $chatTableName (
   message TEXT NOT NULL,
   dateTime TEXT NOT NULL,
   deviceId TEXT NOT NULL,
-  displayName TEXT NULL,
+  recipientName TEXT NULL,
   conversationId TEXT NOT NULL
   )
 ''');
@@ -46,7 +46,7 @@ CREATE TABLE $chatTableName (
         message,
         dateTime,
         deviceId,
-        displayName,
+        recipientName,
         conversationId
         )
         VALUES(?, ?, ?, ?, ?);
@@ -55,7 +55,7 @@ CREATE TABLE $chatTableName (
           chatList.message,
           chatList.dateTime.toIso8601String(),
           chatList.deviceId,
-          chatList.displayName,
+          chatList.recipientName,
           chatList.conversationId,
         ],
       );

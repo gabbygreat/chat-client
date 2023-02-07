@@ -42,9 +42,13 @@ class ConversationView
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  Text('Roseline Ejiofor'),
-                  Text('online'),
+                children: [
+                  Text(
+                    controller.recipientName,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const Text('online'),
                 ],
               ),
             ),
@@ -128,8 +132,8 @@ class ConversationView
                   itemCount: message.length,
                   itemBuilder: (context, index) {
                     return MessageWidget(
-                    messageModel: message.reversed.toList()[index],
-                  );
+                      messageModel: message.reversed.toList()[index],
+                    );
                   },
                 ),
                 Align(
