@@ -30,8 +30,8 @@ class LocalChatHistory {
 CREATE TABLE $chatTableName (
   message TEXT NOT NULL,
   dateTime TEXT NOT NULL,
-  isSender INTEGER NOT NULL,
   deviceId TEXT NOT NULL,
+  displayName TEXT NULL,
   conversationId TEXT NOT NULL
   )
 ''');
@@ -39,16 +39,14 @@ CREATE TABLE $chatTableName (
 
   Future<void> create(List<MessageModel> messageList) async {
     final db = await instance.database;
-    String deviceId = (await PlatformDeviceId.getDeviceId)!;
-
     var batch = db.batch();
     for (MessageModel chatList in messageList) {
       batch.rawInsert(
         '''INSERT OR IGNORE INTO $chatTableName (
         message,
         dateTime,
-        isSender,
         deviceId,
+        displayName,
         conversationId
         )
         VALUES(?, ?, ?, ?, ?);
@@ -56,8 +54,8 @@ CREATE TABLE $chatTableName (
         [
           chatList.message,
           chatList.dateTime.toIso8601String(),
-          chatList.deviceId == deviceId ? 1 : 0,
           chatList.deviceId,
+          chatList.displayName,
           chatList.conversationId,
         ],
       );
@@ -75,9 +73,9 @@ CREATE TABLE $chatTableName (
       await db.rawUpdate(
           "UPDATE $chatTableName SET dateTime = '${message.dateTime.toIso8601String()}' WHERE conversationId = '${message.conversationId}'");
     } on DatabaseException {
-      print(message.toMap());
-      await db.rawDelete(
-          "DELETE FROM $chatTableName WHERE conversationId = '${message.conversationId}'");
+      debugPrint('Error updating chat');
+      // await db.rawDelete(
+      //     "DELETE FROM $chatTableName WHERE conversationId = '${message.conversationId}'");
       // Flushbar(
       //   duration: const Duration(seconds: 3),
       //   message: "Message not found",

@@ -9,7 +9,7 @@ class SocketServices {
 
   Socket get socket {
     if (_socket != null) return _socket!;
-    _socket = io('https://cd52-197-210-226-155.eu.ngrok.io',
+    _socket = io('https://6dd8-2c0f-f5c0-433-82e1-c960-472d-e440-f363.ngrok.io',
         OptionBuilder().setTransports(['websocket']).build());
     return _socket!;
   }

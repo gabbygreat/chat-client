@@ -126,9 +126,11 @@ class ConversationView
                     right: 20.w,
                   ),
                   itemCount: message.length,
-                  itemBuilder: (context, index) => MessageWidget(
+                  itemBuilder: (context, index) {
+                    return MessageWidget(
                     messageModel: message.reversed.toList()[index],
-                  ),
+                  );
+                  },
                 ),
                 Align(
                   alignment: Alignment.bottomRight,
