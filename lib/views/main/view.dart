@@ -103,7 +103,6 @@ class MainView extends StatelessView<MainScreen, MvcController> {
                                 '1234567',
                                 deviceId
                               ];
-                              conversationIds.sort();
                               final conversationId = conversationIds.join('-');
                               await controller.ref
                                   .read(messageProvider.notifier)
@@ -112,7 +111,7 @@ class MainView extends StatelessView<MainScreen, MvcController> {
                                       dateTime: DateTime.now(),
                                       message: 'How body?',
                                       deviceId: '1234567',
-                                      isSender: false,
+                                      displayName: 'Test',
                                       conversationId: conversationId,
                                     ),
                                   );

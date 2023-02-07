@@ -2,11 +2,17 @@ import '/utils/utils.dart';
 
 class LocalStorage {
   static final LocalStorage instance = LocalStorage._init();
-  static late SharedPreferences _prefs;
+  static SharedPreferences? _prefs;
   LocalStorage._init();
 
   Future<SharedPreferences> get prefs async {
+    if (_prefs != null) return _prefs!;
     _prefs = await SharedPreferences.getInstance();
-    return _prefs;
+    return _prefs!;
+  }
+
+  Future<String?> getDisplayName() async {
+    final pref = await instance.prefs;
+    return pref.getString('displayName');
   }
 }

@@ -55,14 +55,14 @@ class ConversationController extends ConsumerState<ConversationScreen> {
     FocusScope.of(context).unfocus();
     String deviceId = (await PlatformDeviceId.getDeviceId)!;
     List<String> conversationIds = [deviceId, widget.messageInfo.deviceId];
-    conversationIds.sort();
+    String? displayName = await LocalStorage.instance.getDisplayName();
     final conversationId = conversationIds.join('-');
     await ref.read(messageProvider.notifier).addMessage(
           MessageModel(
             dateTime: DateTime.now(),
             message: messageController.text.trim(),
-            isSender: true,
             deviceId: deviceId,
+            displayName: displayName,
             conversationId: conversationId,
           ),
         );
