@@ -2,8 +2,13 @@ import '../utils/utils.dart';
 
 final GoRouter routes = GoRouter(
   debugLogDiagnostics: true,
-  initialLocation: '/home',
+  initialLocation: '/',
   routes: <GoRoute>[
+    GoRoute(
+      path: '/',
+      name: 'main',
+      builder: (context, state) => const MainScreen(),
+    ),
     GoRoute(
       path: '/home',
       name: 'home',
@@ -29,9 +34,12 @@ final GoRouter routes = GoRouter(
       path: '/conversation',
       name: 'conversation',
       pageBuilder: (BuildContext context, GoRouterState state) {
+        final MessageModel messageInfo = state.extra! as MessageModel;
         return CustomTransitionPage(
           key: state.pageKey,
-          child: const ConversationScreen(),
+          child: ConversationScreen(
+            messageInfo: messageInfo,
+          ),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             animation = CurvedAnimation(
               curve: Curves.fastLinearToSlowEaseIn,

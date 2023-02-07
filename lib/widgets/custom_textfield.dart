@@ -123,10 +123,10 @@ class CustomTextInput extends StatelessWidget {
           ),
           decoration: InputDecoration(
             contentPadding: contentPadding,
-            hintStyle: TextStyle(
+            hintStyle: const TextStyle(
               fontWeight: FontWeight.w400,
               fontSize: 16,
-              color: blackColor,
+              color: Colors.grey,
             ),
             prefixIcon: prefixIcon,
             suffixIcon: suffixIcon,

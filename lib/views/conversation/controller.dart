@@ -6,7 +6,11 @@ import '../../utils/utils.dart';
 part 'view.dart';
 
 class ConversationScreen extends ConsumerStatefulWidget {
-  const ConversationScreen({Key? key}) : super(key: key);
+  final MessageModel messageInfo;
+  const ConversationScreen({
+    Key? key,
+    required this.messageInfo,
+  }) : super(key: key);
 
   @override
   ConsumerState<ConversationScreen> createState() => ConversationController();
@@ -34,6 +38,11 @@ class ConversationController extends ConsumerState<ConversationScreen> {
         });
       }
     });
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (mounted) {
+        ref.read(messageProvider.notifier).getMessages(widget.messageInfo);
+      }
+    });
   }
 
   @override
@@ -42,16 +51,23 @@ class ConversationController extends ConsumerState<ConversationScreen> {
     super.dispose();
   }
 
-  void sendMessage() {
-    ref.read(messageProvider.notifier).addMessage(
+  void sendMessage() async {
+    FocusScope.of(context).unfocus();
+    String deviceId = (await PlatformDeviceId.getDeviceId)!;
+    List<String> conversationIds = [deviceId, widget.messageInfo.deviceId];
+    conversationIds.sort();
+    final conversationId = conversationIds.join('-');
+    await ref.read(messageProvider.notifier).addMessage(
           MessageModel(
             dateTime: DateTime.now(),
-            message: messageController.text,
+            message: messageController.text.trim(),
             isSender: true,
+            deviceId: deviceId,
+            conversationId: conversationId,
           ),
         );
+    await ref.read(lastMessageProvider.notifier).getLastMessage();
     messageController.clear();
-    FocusScope.of(context).unfocus();
   }
 
   void rebuild() => setState(() {});

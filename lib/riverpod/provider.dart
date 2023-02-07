@@ -3,63 +3,32 @@ import 'notifier.dart';
 
 final messageProvider =
     StateNotifierProvider<MessageNotifierProvider, List<MessageModel>>(
-  (_) => MessageNotifierProvider(
-    [
-      MessageModel(
-        dateTime: DateTime.now(),
-        message: 'Hi',
-        isSender: false,
-      ),
-      MessageModel(
-        dateTime: DateTime.now(),
-        message: 'Hello',
-        isSender: true,
-      ),
-      MessageModel(
-        dateTime: DateTime.now(),
-        message: 'How body?',
-        isSender: false,
-      ),
-      MessageModel(
-        dateTime: DateTime.now(),
-        message: 'I dey oo',
-        isSender: true,
-      ),
-      MessageModel(
-        dateTime: DateTime.now(),
-        message: 'Are you working',
-        isSender: false,
-      ),
-      MessageModel(
-        dateTime: DateTime.now(),
-        message: 'Yh.\n What are you doing?',
-        isSender: true,
-      ),
-      MessageModel(
-        dateTime: DateTime.now(),
-        message: 'Nothing much, just thinking about you...',
-        isSender: false,
-      ),
-      MessageModel(
-        dateTime: DateTime.now(),
-        message: 'Lol. We\'ll see na.',
-        isSender: true,
-      ),
-      MessageModel(
-        dateTime: DateTime.now(),
-        message: 'What time are you coming?',
-        isSender: false,
-      ),
-      MessageModel(
-        dateTime: DateTime.now(),
-        message: 'Around 2pm',
-        isSender: true,
-      ),
-      MessageModel(
-        dateTime: DateTime.now(),
-        message: 'After I finish submitting',
-        isSender: true,
-      ),
-    ],
-  ),
+  (_) => MessageNotifierProvider([]),
 );
+
+final lastMessageProvider =
+    StateNotifierProvider<LastMessageNotifierProvider, List<MessageModel>>(
+  (_) => LastMessageNotifierProvider([]),
+);
+
+final lastMessageAsyncProvider =
+    FutureProvider((_) => LocalChatHistory.instance.getLastMessageList());
+
+final lastMessageSearchTextProvider = StateProvider((_) => '');
+final lastMessageSearchList = StateProvider<List<MessageModel>>((_) => []);
+
+final lastMessageSearchListProvider = StateProvider((ref) {
+  final searchText = ref.watch(lastMessageSearchTextProvider);
+  final searchList = ref.watch(lastMessageSearchList);
+  List<MessageModel> searchResult = [];
+
+  if (searchText.isEmpty) {
+    searchResult = searchList;
+  } else {
+    searchList.where(
+      (element) =>
+          element.message.toLowerCase().contains(searchText.toLowerCase()),
+    );
+  }
+  return searchResult;
+});

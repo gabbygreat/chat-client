@@ -13,3 +13,6 @@ export 'package:intl/intl.dart' hide TextDirection;
 export 'package:sqflite/sqflite.dart';
 export 'dart:io' hide Socket;
 export 'package:path_provider/path_provider.dart';
+export 'package:shimmer/shimmer.dart';
+export 'package:flutter_svg/flutter_svg.dart';
+export 'package:platform_device_id/platform_device_id.dart';

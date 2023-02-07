@@ -1,3 +1,5 @@
+import 'package:chat/riverpod/provider.dart';
+
 import '/utils/utils.dart';
 
 class SocketServices {
@@ -7,25 +9,29 @@ class SocketServices {
 
   Socket get socket {
     if (_socket != null) return _socket!;
-    _socket = io('https://fb6f-197-210-84-114.eu.ngrok.io',
+    _socket = io('https://cd52-197-210-226-155.eu.ngrok.io',
         OptionBuilder().setTransports(['websocket']).build());
     return _socket!;
   }
 
-  connectAndListen() {
+  void connectAndListen(WidgetRef ref) {
     socket.onConnect((data) => debugPrint('Connected'));
     socket.onError((data) => debugPrint('Error => $data'));
     socket.onDisconnect((data) => debugPrint('Disconnected'));
-    socket.on('test', (data) => debugPrint(data));
-    socket.on('message', (data) => receiveMessage(data));
-    sendMessage('Test Emit');
+    socket.on('message', (data) => receiveMessage(data, ref));
   }
 
-  sendMessage(String message) {
-    socket.emit('message', message);
+  void sendMessage(MessageModel message) {
+    socket.emit(
+      'message',
+      message.toMap(),
+    );
   }
 
-  receiveMessage(dynamic data) {
-    debugPrint(data);
+  receiveMessage(dynamic data, WidgetRef ref) async {
+    MessageModel messageModel = MessageModel.fromMap(data);
+    await LocalChatHistory.instance.updateLocal(message: messageModel);
+    await ref.read(lastMessageProvider.notifier).getLastMessage();
+    return true;
   }
 }

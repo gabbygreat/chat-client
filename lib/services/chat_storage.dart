@@ -30,29 +30,35 @@ class LocalChatHistory {
 CREATE TABLE $chatTableName (
   message TEXT NOT NULL,
   dateTime TEXT NOT NULL,
-  isSender TEXT NOT NULL
+  isSender INTEGER NOT NULL,
+  deviceId TEXT NOT NULL,
+  conversationId TEXT NOT NULL
   )
 ''');
   }
 
-  Future<void> create(List<MessageModel> chatLists,
-      {required String? photo, required String fullname}) async {
+  Future<void> create(List<MessageModel> messageList) async {
     final db = await instance.database;
+    String deviceId = (await PlatformDeviceId.getDeviceId)!;
 
     var batch = db.batch();
-    for (MessageModel chatList in chatLists) {
+    for (MessageModel chatList in messageList) {
       batch.rawInsert(
         '''INSERT OR IGNORE INTO $chatTableName (
         message,
         dateTime,
-        isSender
+        isSender,
+        deviceId,
+        conversationId
         )
-        VALUES(?, ?, ?);
+        VALUES(?, ?, ?, ?, ?);
         ''',
         [
           chatList.message,
           chatList.dateTime.toIso8601String(),
-          chatList.isSender,
+          chatList.deviceId == deviceId ? 1 : 0,
+          chatList.deviceId,
+          chatList.conversationId,
         ],
       );
     }
@@ -61,18 +67,17 @@ CREATE TABLE $chatTableName (
   }
 
   Future<void> updateLocal({
-    required int messageId,
-    required String clientMessageId,
-    required DateTime date,
+    required MessageModel message,
   }) async {
     //log(" hey chat list updated");
     final db = await instance.database;
     try {
       await db.rawUpdate(
-          "UPDATE $chatTableName SET messageId = $messageId, date = '${date.toIso8601String()}' WHERE clientMessageId = '$clientMessageId'");
+          "UPDATE $chatTableName SET dateTime = '${message.dateTime.toIso8601String()}' WHERE conversationId = '${message.conversationId}'");
     } on DatabaseException {
+      print(message.toMap());
       await db.rawDelete(
-          "DELETE FROM $chatTableName WHERE clientMessageId = '$clientMessageId'");
+          "DELETE FROM $chatTableName WHERE conversationId = '${message.conversationId}'");
       // Flushbar(
       //   duration: const Duration(seconds: 3),
       //   message: "Message not found",
@@ -82,23 +87,11 @@ CREATE TABLE $chatTableName (
   }
 
   Future<List<MessageModel>> readLocalConversation(
-      {required int userId, required int placeId}) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    int? chatPlaceId = prefs.getInt('chatPlaceId');
-    if (chatPlaceId == null) {
-      await prefs.setInt('chatPlaceId', prefs.getInt('placeId')!);
-    }
-    chatPlaceId = prefs.getInt('chatPlaceId');
-    int? chatUserId = prefs.getInt('chatUserId');
-    if (chatUserId == null) {
-      await prefs.setInt('chatUserId', prefs.getInt('userid')!);
-    }
-    chatUserId = prefs.getInt('chatUserId');
-
+      MessageModel messadeInfo) async {
     final db = await instance.database;
-    final conversation = await db.rawQuery(
-        "SELECT * FROM $chatTableName WHERE userId=$userId AND placeId=$placeId AND (toplaceid=$chatPlaceId OR toplaceid=$placeId) AND (myPlaceId=$chatPlaceId) AND (touserid = $chatUserId OR touserid=$userId) ORDER BY date DESC");
 
+    final conversation =
+        await db.rawQuery("SELECT * FROM $chatTableName ORDER BY dateTime");
     List<MessageModel> result = [];
     for (var i in conversation) {
       result.add(MessageModel.fromMap(i));
@@ -108,20 +101,9 @@ CREATE TABLE $chatTableName (
 
   Future<List<MessageModel>> getLastMessageList() async {
     final db = await instance.database;
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    int? chatPlaceId = prefs.getInt('chatPlaceId');
-    if (chatPlaceId == null) {
-      await prefs.setInt('chatPlaceId', prefs.getInt('placeId')!);
-    }
-    chatPlaceId = prefs.getInt('chatPlaceId');
-    int? chatUserId = prefs.getInt('chatUserId');
-    if (chatUserId == null) {
-      await prefs.setInt('chatUserId', prefs.getInt('userid')!);
-    }
-    chatUserId = prefs.getInt('chatUserId');
-
+// SELECT * FROM chat_table WHERE date IN (SELECT MAX(date) FROM chat_table a WHERE ((fromuserid=$chatUserId AND fromplaceid=$chatPlaceId) OR (touserid=$chatUserId AND toplaceid=$chatPlaceId)) GROUP BY conversationId) GROUP BY date ORDER BY date DESC
     final conversation = await db.rawQuery(
-        "SELECT * FROM $chatTableName WHERE date IN (SELECT MAX(date) FROM $chatTableName a WHERE ((fromuserid=$chatUserId AND fromplaceid=$chatPlaceId) OR (touserid=$chatUserId AND toplaceid=$chatPlaceId)) GROUP BY conversationId) GROUP BY date ORDER BY date DESC");
+        "SELECT * FROM $chatTableName WHERE dateTime IN (SELECT MAX(dateTime) FROM $chatTableName) GROUP BY deviceId ORDER BY dateTime DESC");
     List<MessageModel> result = [];
     for (var i in conversation) {
       result.add(MessageModel.fromMap(i));
