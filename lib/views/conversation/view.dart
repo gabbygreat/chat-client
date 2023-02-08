@@ -44,7 +44,7 @@ class ConversationView
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    controller.recipientName,
+                    widget.messageInfo.recipientName ?? '',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),

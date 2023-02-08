@@ -16,3 +16,4 @@ export 'package:path_provider/path_provider.dart';
 export 'package:shimmer/shimmer.dart';
 export 'package:flutter_svg/flutter_svg.dart';
 export 'package:platform_device_id/platform_device_id.dart';
+export 'package:dio/dio.dart';

@@ -19,7 +19,6 @@ class MessageNotifierProvider extends StateNotifier<List<MessageModel>> {
     }
   }
 
-
   Future<void> getMessages(MessageModel messageInfo) async {
     state = await LocalChatHistory.instance.readLocalConversation(messageInfo);
   }
@@ -30,5 +29,9 @@ class LastMessageNotifierProvider extends StateNotifier<List<MessageModel>> {
 
   Future<void> getLastMessage() async {
     state = await LocalChatHistory.instance.getLastMessageList();
+  }
+
+  showRequest(MessageModel model) {
+    state = [...state, model];
   }
 }

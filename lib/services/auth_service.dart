@@ -1,20 +1,19 @@
-// import '/utils/utils.dart';
+import '/utils/utils.dart';
 
-// class AuthService {
-//   final Dio _dio = Dio();
-//   final String _baseUrl = 'https://findmeapptest.000webhostapp.com/api';
+class AuthService {
+  final Dio _dio = Dio();
+  Future<Response> postRequestHandler(
+      String path, Map<String, dynamic> data) async {
+    return await _dio.post(
+      '${ChatConstant.baseUrl}/$path',
+      data: data,
+      queryParameters: data,
+    );
+  }
 
-//   Future<Response> postRequestHandler(
-//       String path, Map<String, dynamic> data) async {
-//     return await _dio.post(
-//       path,
-//       data: data,
-//     );
-//   }
-
-//   Future<Response> getRequestHandler(String path) async {
-//     return await _dio.get(path);
-//   }
+  Future<Response> getRequestHandler(String path) async {
+    return await _dio.get('${ChatConstant.baseUrl}/$path');
+  }
 
 //   Future<LoginResponse> loginUser(
 //       String email, String password, String deviceName) async {
@@ -64,4 +63,4 @@
 //       return const RegisterResponse(status: false);
 //     }
 //   }
-// }
+}

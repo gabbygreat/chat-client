@@ -1,6 +1,3 @@
-import 'package:chat/riverpod/provider.dart';
-import 'package:chat/widgets/message_widget.dart';
-
 import '../../utils/utils.dart';
 
 part 'view.dart';
@@ -19,7 +16,6 @@ class ConversationScreen extends ConsumerStatefulWidget {
 class ConversationController extends ConsumerState<ConversationScreen> {
   late TextEditingController messageController;
   late ScrollController listController;
-  late String recipientName;
   bool visible = false;
 
   @override
@@ -27,8 +23,7 @@ class ConversationController extends ConsumerState<ConversationScreen> {
     super.initState();
     messageController = TextEditingController();
     listController = ScrollController();
-    recipientName = widget.messageInfo.recipientName ??
-        'User ${widget.messageInfo.deviceId}';
+
     listController.addListener(() {
       if (listController.offset > 0) {
         setState(() {
@@ -40,7 +35,7 @@ class ConversationController extends ConsumerState<ConversationScreen> {
         });
       }
     });
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       if (mounted) {
         ref.read(messageProvider.notifier).getMessages(widget.messageInfo);
       }
@@ -54,16 +49,25 @@ class ConversationController extends ConsumerState<ConversationScreen> {
   }
 
   void sendMessage() async {
-    FocusScope.of(context).unfocus();
-    String deviceId = (await PlatformDeviceId.getDeviceId)!;
-    List<String> conversationIds = [deviceId, widget.messageInfo.deviceId];
+    String senderDeviceId = (await PlatformDeviceId.getDeviceId)!;
+    List<String> conversationIds = [
+      senderDeviceId,
+      widget.messageInfo.recipientDeviceId
+    ];
     final conversationId = conversationIds.join('-');
+    String messageId = 'chat_${DateTime.now().toIso8601String()}';
+    List<String> sortConversationId = conversationIds.toList();
+    sortConversationId.sort();
     await ref.read(messageProvider.notifier).addMessage(
           MessageModel(
             dateTime: DateTime.now(),
             message: messageController.text.trim(),
-            deviceId: deviceId,
-            recipientName: recipientName,
+            senderDeviceId: senderDeviceId,
+            recipientDeviceId: widget.messageInfo.recipientDeviceId,
+            sortConversationId: sortConversationId.join('-'),
+            messageId: messageId,
+            senderName: 'User $senderDeviceId',
+            recipientName: 'User ${widget.messageInfo.recipientDeviceId}',
             conversationId: conversationId,
           ),
         );

@@ -27,7 +27,7 @@ class MainView extends StatelessView<MainScreen, MvcController> {
                   ),
                 ),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () => controller.findUsers(),
                   icon: const Icon(
                     Icons.maps_ugc,
                   ),
@@ -95,30 +95,7 @@ class MainView extends StatelessView<MainScreen, MvcController> {
                             ),
                           ),
                           InkWell(
-                            onTap: () async {
-                              String deviceId =
-                                  (await PlatformDeviceId.getDeviceId)!;
-
-                              List<String> conversationIds = [
-                                '1234567',
-                                deviceId
-                              ];
-                              final conversationId = conversationIds.join('-');
-                              await controller.ref
-                                  .read(messageProvider.notifier)
-                                  .addMessage(
-                                    MessageModel(
-                                      dateTime: DateTime.now(),
-                                      message: 'How body?',
-                                      deviceId: '1234567',
-                                      recipientName: 'Test Name',
-                                      conversationId: conversationId,
-                                    ),
-                                  );
-                              await controller.ref
-                                  .read(lastMessageProvider.notifier)
-                                  .getLastMessage();
-                            },
+                            onTap: () => controller.findUsers(),
                             child: Lottie.asset('assets/lottie/add.json',
                                 width: 100.h, height: 100.h),
                           ),
