@@ -42,7 +42,9 @@ class MessageTile extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        message.recipientName ?? '',
+                        message.type == 'send'
+                            ? message.recipientName ?? 'User'
+                            : message.senderName ?? 'Userrr',
                       ),
                       Text(
                         DateFormat('h:mm a').format(
@@ -59,13 +61,20 @@ class MessageTile extends StatelessWidget {
                   ),
                   Row(
                     children: [
-                      Icon(
-                        Icons.done_all,
-                        size: 15.r,
-                      ),
-                      SizedBox(
-                        width: 2.w,
-                      ),
+                      if (message.isRequest == false)
+                        if (message.type == 'send')
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.done_all,
+                                size: 15.r,
+                              ),
+                              SizedBox(
+                                width: 2.w,
+                              ),
+                            ],
+                          ),
                       Flexible(
                         child: Text(
                           message.message,

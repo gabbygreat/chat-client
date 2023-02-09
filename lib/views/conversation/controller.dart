@@ -50,9 +50,13 @@ class ConversationController extends ConsumerState<ConversationScreen> {
 
   void sendMessage() async {
     String senderDeviceId = (await PlatformDeviceId.getDeviceId)!;
+    String recipientDeviceId = widget.messageInfo.recipientDeviceId;
+    if (senderDeviceId == recipientDeviceId) {
+      recipientDeviceId = widget.messageInfo.senderDeviceId;
+    }
     List<String> conversationIds = [
       senderDeviceId,
-      widget.messageInfo.recipientDeviceId
+     recipientDeviceId
     ];
     final conversationId = conversationIds.join('-');
     String messageId = 'chat_${DateTime.now().toIso8601String()}';
@@ -63,11 +67,12 @@ class ConversationController extends ConsumerState<ConversationScreen> {
             dateTime: DateTime.now(),
             message: messageController.text.trim(),
             senderDeviceId: senderDeviceId,
-            recipientDeviceId: widget.messageInfo.recipientDeviceId,
+            recipientDeviceId: recipientDeviceId,
             sortConversationId: sortConversationId.join('-'),
             messageId: messageId,
+            type: 'send',
             senderName: 'User $senderDeviceId',
-            recipientName: 'User ${widget.messageInfo.recipientDeviceId}',
+            recipientName: 'User $recipientDeviceId',
             conversationId: conversationId,
           ),
         );

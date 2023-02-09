@@ -13,7 +13,7 @@ class HomeScreen extends StatefulWidget {
 
 class HomeController extends State<HomeScreen> {
   goToChat() => context.pushNamed(
-        'conversation',
+        'main',
       );
 
   @override

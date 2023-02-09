@@ -35,6 +35,8 @@ CREATE TABLE $chatTableName (
   conversationId TEXT NOT NULL,
   messageId TEXT NOT NULL,
   sortConversationId TEXT NOT NULL,
+  type TEXT NOT NULL,
+  senderName TEXT NOT NULL,
   recipientDeviceId TEXT NOT NULL
   )
 ''');
@@ -53,9 +55,11 @@ CREATE TABLE $chatTableName (
         conversationId,
         messageId,
         sortConversationId,
+        type,
+        senderName,
         recipientDeviceId
         )
-        VALUES(?, ?, ?, ?, ?, ?, ?, ?);
+        VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
         ''',
         [
           chatList.message,
@@ -65,6 +69,8 @@ CREATE TABLE $chatTableName (
           chatList.conversationId,
           chatList.messageId,
           chatList.sortConversationId,
+          chatList.type,
+          chatList.senderName,
           chatList.recipientDeviceId,
         ],
       );
@@ -73,9 +79,7 @@ CREATE TABLE $chatTableName (
     await batch.commit(noResult: true);
   }
 
-  Future<void> updateLocal({
-    required MessageModel message,
-  }) async {
+  Future<void> updateLocal({required MessageModel message}) async {
     //log(" hey chat list updated");
     final db = await instance.database;
     String deviceId = (await PlatformDeviceId.getDeviceId)!;

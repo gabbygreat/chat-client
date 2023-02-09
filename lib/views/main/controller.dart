@@ -11,7 +11,7 @@ class MainScreen extends ConsumerStatefulWidget {
 class MvcController extends ConsumerState<MainScreen> {
   late TextEditingController searchController;
   void openMessage(MessageModel message) {
-    if (message.isRequest) {
+    if (message.isRequest == true) {
       showModalBottomSheet(
         context: context,
         shape: RoundedRectangleBorder(
@@ -31,9 +31,9 @@ class MvcController extends ConsumerState<MainScreen> {
               const BottomSheetTop(),
               const Spacer(),
               InkWell(
-                onTap: () {
+                onTap: () async {
                   Navigator.of(context).pop();
-                  acceptRequest(message);
+                  await acceptRequest(message);
                 },
                 child: Container(
                   decoration: BoxDecoration(
@@ -59,7 +59,7 @@ class MvcController extends ConsumerState<MainScreen> {
           ),
         ),
       );
-    } else {
+    } else if (message.isRequest == false) {
       context.pushNamed(
         'conversation',
         extra: message,
@@ -171,6 +171,23 @@ class MvcController extends ConsumerState<MainScreen> {
       'senderName': senderName,
       'senderSocketId': senderSocketId,
     });
+
+    final message = MessageModel(
+      dateTime: DateTime.now(),
+      message: 'Request sent',
+      messageId: messageId,
+      isRequest: null,
+      type: 'send',
+      conversationId: 'test-test',
+      sortConversationId: 'test-test',
+      senderName: 'User $senderDeviceId',
+      senderSocketId: senderSocketId,
+      senderDeviceId: senderDeviceId,
+      recipientName: 'User',
+      recipientDeviceId: 'recipientDeviceId',
+      recipientSocketId: receipientSocketId, //to do
+    );
+    ref.read(lastMessageProvider.notifier).showRequest(message);
   }
 
   Future<void> acceptRequest(MessageModel message) async {
@@ -184,6 +201,24 @@ class MvcController extends ConsumerState<MainScreen> {
       'senderName': senderName,
       'senderSocketId': GlobalVariable.socketId,
     });
+    final conv = message.conversationId.split('-').reversed.toList();
+    final sort = conv.toList();
+    await ref.read(lastMessageProvider.notifier).getLastMessage();
+    final messsage = MessageModel(
+      dateTime: message.dateTime,
+      message: 'Request Accepted!',
+      messageId: messageId,
+      type: 'send',
+      conversationId: conv.join('-'),
+      sortConversationId: sort.join('-'),
+      senderName: 'User $senderDeviceId',
+      senderSocketId: message.senderSocketId,
+      senderDeviceId: senderDeviceId,
+      recipientName: message.senderName,
+      recipientDeviceId: message.senderDeviceId,
+      recipientSocketId: message.senderSocketId,
+    );
+    ref.read(lastMessageProvider.notifier).showRequest(messsage);
   }
 
   @override

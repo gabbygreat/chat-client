@@ -4,11 +4,13 @@ class MessageModel {
   final String? recipientName;
   final String? senderName;
   final String? senderSocketId;
+  final String? recipientSocketId;
   final String messageId;
   final String conversationId;
   final String senderDeviceId;
   final String recipientDeviceId;
-  final bool isRequest;
+  final bool? isRequest;
+  String type;
   final String sortConversationId;
   MessageModel({
     required this.dateTime,
@@ -19,6 +21,8 @@ class MessageModel {
     required this.messageId,
     this.isRequest = false,
     this.senderSocketId,
+    this.recipientSocketId,
+    required this.type,
     required this.recipientDeviceId,
     required this.conversationId,
     required this.sortConversationId,
@@ -29,6 +33,7 @@ class MessageModel {
       message: data['message'],
       recipientName: data['recipientName'],
       senderName: data['senderName'],
+      type: data['type'],
       recipientDeviceId: data['recipientDeviceId'],
       senderDeviceId: data['senderDeviceId'],
       sortConversationId: data['sortConversationId'],
@@ -45,5 +50,6 @@ class MessageModel {
         'recipientDeviceId': recipientDeviceId,
         'conversationId': conversationId,
         'messageId': messageId,
+        'type': type,
       };
 }
