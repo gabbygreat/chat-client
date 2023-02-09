@@ -1,29 +1,55 @@
 class MessageModel {
   final String message;
   final DateTime dateTime;
-  final String? displayName;
-  final String deviceId;
+  final String? recipientName;
+  final String? senderName;
+  final String? senderSocketId;
+  final String? recipientSocketId;
+  final String messageId;
   final String conversationId;
+  final String senderDeviceId;
+  final String recipientDeviceId;
+  final bool? isRequest;
+  String type;
+  final String sortConversationId;
   MessageModel({
     required this.dateTime,
     required this.message,
-    required this.deviceId,
-    required this.displayName,
+    required this.senderDeviceId,
+    required this.recipientName,
+    required this.senderName,
+    required this.messageId,
+    this.isRequest = false,
+    this.senderSocketId,
+    this.recipientSocketId,
+    required this.type,
+    required this.recipientDeviceId,
     required this.conversationId,
+    required this.sortConversationId,
   });
 
   static MessageModel fromMap(Map<String, dynamic> data) => MessageModel(
       dateTime: DateTime.parse(data['dateTime']),
       message: data['message'],
-      displayName: data['displayName'],
-      deviceId: data['deviceId'],
+      recipientName: data['recipientName'],
+      senderName: data['senderName'],
+      type: data['type'],
+      recipientDeviceId: data['recipientDeviceId'],
+      senderDeviceId: data['senderDeviceId'],
+      sortConversationId: data['sortConversationId'],
+      messageId: data['messageId'],
       conversationId: data['conversationId']);
 
   Map<String, dynamic> toMap() => {
         'message': message,
         'dateTime': dateTime.toIso8601String(),
-        'deviceId': deviceId,
-        'displayName': displayName,
-        'conversationId': conversationId
+        'senderDeviceId': senderDeviceId,
+        'sortConversationId': sortConversationId,
+        'recipientName': recipientName,
+        'senderName': senderName,
+        'recipientDeviceId': recipientDeviceId,
+        'conversationId': conversationId,
+        'messageId': messageId,
+        'type': type,
       };
 }

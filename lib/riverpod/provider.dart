@@ -1,5 +1,4 @@
 import '../utils/utils.dart';
-import 'notifier.dart';
 
 final messageProvider =
     StateNotifierProvider<MessageNotifierProvider, List<MessageModel>>(
@@ -31,4 +30,9 @@ final lastMessageSearchListProvider = StateProvider((ref) {
     );
   }
   return searchResult;
+});
+
+final findUsersProvider = FutureProvider.autoDispose((_) {
+  final authServices = AuthService();
+  return authServices.getRequestHandler('users');
 });

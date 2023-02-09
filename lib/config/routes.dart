@@ -2,7 +2,7 @@ import '../utils/utils.dart';
 
 final GoRouter routes = GoRouter(
   debugLogDiagnostics: true,
-  initialLocation: '/',
+  initialLocation: '/home',
   routes: <GoRoute>[
     GoRoute(
       path: '/',

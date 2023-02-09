@@ -11,8 +11,9 @@ class LocalStorage {
     return _prefs!;
   }
 
-  Future<String?> getDisplayName() async {
+  Future<String> getDisplayName() async {
+    String deviceId = (await PlatformDeviceId.getDeviceId)!;
     final pref = await instance.prefs;
-    return pref.getString('displayName');
+    return pref.getString('displayName') ?? 'User $deviceId';
   }
 }

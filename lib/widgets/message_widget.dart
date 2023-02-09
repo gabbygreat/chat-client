@@ -13,23 +13,24 @@ class MessageWidget extends StatefulWidget {
 
 class _MessageWidgetState extends State<MessageWidget> {
   bool isLongPress = false;
-  String? deviceId;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    PlatformDeviceId.getDeviceId.then((value) => deviceId = value);
     return Padding(
       padding: EdgeInsets.only(bottom: 8.h),
       child: Row(
-        mainAxisAlignment:
-            deviceId == widget.messageModel.conversationId.split('-').first
-                ? MainAxisAlignment.end
-                : MainAxisAlignment.start,
+        mainAxisAlignment: widget.messageModel.type == 'send'
+            ? MainAxisAlignment.end
+            : MainAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (!(deviceId ==
-              widget.messageModel.conversationId.split('-').first))
+          if (widget.messageModel.type != 'send')
             Row(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,

@@ -1,6 +1,3 @@
-import 'package:chat/riverpod/provider.dart';
-import 'package:chat/widgets/message_widget.dart';
-
 import '../../utils/utils.dart';
 
 part 'view.dart';
@@ -38,7 +35,7 @@ class ConversationController extends ConsumerState<ConversationScreen> {
         });
       }
     });
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       if (mounted) {
         ref.read(messageProvider.notifier).getMessages(widget.messageInfo);
       }
@@ -52,17 +49,30 @@ class ConversationController extends ConsumerState<ConversationScreen> {
   }
 
   void sendMessage() async {
-    FocusScope.of(context).unfocus();
-    String deviceId = (await PlatformDeviceId.getDeviceId)!;
-    List<String> conversationIds = [deviceId, widget.messageInfo.deviceId];
-    String? displayName = await LocalStorage.instance.getDisplayName();
+    String senderDeviceId = (await PlatformDeviceId.getDeviceId)!;
+    String recipientDeviceId = widget.messageInfo.recipientDeviceId;
+    if (senderDeviceId == recipientDeviceId) {
+      recipientDeviceId = widget.messageInfo.senderDeviceId;
+    }
+    List<String> conversationIds = [
+      senderDeviceId,
+     recipientDeviceId
+    ];
     final conversationId = conversationIds.join('-');
+    String messageId = 'chat_${DateTime.now().toIso8601String()}';
+    List<String> sortConversationId = conversationIds.toList();
+    sortConversationId.sort();
     await ref.read(messageProvider.notifier).addMessage(
           MessageModel(
             dateTime: DateTime.now(),
             message: messageController.text.trim(),
-            deviceId: deviceId,
-            displayName: displayName,
+            senderDeviceId: senderDeviceId,
+            recipientDeviceId: recipientDeviceId,
+            sortConversationId: sortConversationId.join('-'),
+            messageId: messageId,
+            type: 'send',
+            senderName: 'User $senderDeviceId',
+            recipientName: 'User $recipientDeviceId',
             conversationId: conversationId,
           ),
         );

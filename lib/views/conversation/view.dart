@@ -6,58 +6,66 @@ class ConversationView
       : super(state, key: key);
 
   Widget topBar() => Container(
-        height: 80.h,
+        height: 56.h + 24.h,
         padding: EdgeInsets.only(
           left: 15.w,
           right: 15.w,
           bottom: 10.h,
         ),
         color: Colors.white,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            InkWell(
-              onTap: () => controller.context.pop(),
-              overlayColor: MaterialStateProperty.resolveWith(
-                (states) => Colors.transparent,
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Icon(Icons.arrow_back_ios),
-                  CircleAvatar(
-                    radius: 20.r,
-                    child: const Icon(
-                      Icons.person,
+        child: SafeArea(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              InkWell(
+                onTap: () => controller.context.pop(),
+                overlayColor: MaterialStateProperty.resolveWith(
+                  (states) => Colors.transparent,
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.arrow_back_ios),
+                    CircleAvatar(
+                      radius: 20.r,
+                      child: const Icon(
+                        Icons.person,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            SizedBox(
-              width: 10.w,
-            ),
-            Expanded(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  Text('Roseline Ejiofor'),
-                  Text('online'),
-                ],
+              SizedBox(
+                width: 10.w,
               ),
-            ),
-            const Icon(
-              Icons.phone_outlined,
-            ),
-            SizedBox(
-              width: 15.w,
-            ),
-            const Icon(
-              Icons.search,
-            ),
-          ],
+              Expanded(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.messageInfo.type == 'send'
+                          ? widget.messageInfo.recipientName ?? 'User'
+                          : widget.messageInfo.senderName ?? 'User',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const Text('online'),
+                  ],
+                ),
+              ),
+              const Icon(
+                Icons.phone_outlined,
+              ),
+              SizedBox(
+                width: 15.w,
+              ),
+              const Icon(
+                Icons.search,
+              ),
+            ],
+          ),
         ),
       );
 
@@ -128,8 +136,8 @@ class ConversationView
                   itemCount: message.length,
                   itemBuilder: (context, index) {
                     return MessageWidget(
-                    messageModel: message.reversed.toList()[index],
-                  );
+                      messageModel: message.reversed.toList()[index],
+                    );
                   },
                 ),
                 Align(
