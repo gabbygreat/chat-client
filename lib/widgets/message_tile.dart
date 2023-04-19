@@ -41,10 +41,15 @@ class MessageTile extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        message.type == 'send'
-                            ? message.recipientName ?? 'User'
-                            : message.senderName ?? 'Userrr',
+                      Flexible(
+                        child: Text(
+                          message.type == 'send'
+                              ? message.recipientName ?? 'User'
+                              : message.senderName ?? 'Userrr',
+                          maxLines: 1,
+                          overflow: TextOverflow.clip,
+                          softWrap: true,
+                        ),
                       ),
                       Text(
                         DateFormat('h:mm a').format(

@@ -1,5 +1,5 @@
 class ChatConstant {
-  static String baseUrl = 'https://6d9e-197-210-78-15.eu.ngrok.io';
+  static String baseUrl = 'https://dcfb-197-210-226-164.ngrok-free.app';
 }
 
 class GlobalVariable {
